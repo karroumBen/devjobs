@@ -2,9 +2,7 @@ import React from 'react'
 
 function index() {
   return (
-    <div>
-      details
-    </div>
+    <div className="profile">profile</div>
   )
 }
 

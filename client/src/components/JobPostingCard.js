@@ -1,9 +1,9 @@
 import React from 'react'
 import companyLogo from '../assets/app-store.png';
 
-const JobPostingCard = () => {
+const JobPostingCard = ({ onClick }) => {
   return (
-    <article className="card" tabIndex={4}>
+    <article onClick={onClick} className="card" tabIndex={4}>
       <img
         src={companyLogo}
         alt="company logo"

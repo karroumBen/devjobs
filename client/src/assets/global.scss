@@ -69,6 +69,10 @@ code {
   }
 }
 
+.error {
+  color: red;
+}
+
 /* styling nav-bar */
 
 .nav-bar {
@@ -254,7 +258,11 @@ code {
       flex-direction: column;
       gap: 1rem;
       justify-content: center;
-
+      > div {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
       button {
         margin-top: 1rem;
       }

@@ -2,8 +2,11 @@ import '../../assets/global.scss';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import JobPostingCard from '../../components/JobPostingCard';
+import { useAppContext } from '../../context';
 
 const App = () => {
+  const { isAuthenticated } = useAppContext();
+
   return (
     <div className="container">
       <header className="nav-bar">
@@ -11,21 +14,27 @@ const App = () => {
           <h1>Dev jobs</h1>
         </div>
 
-        <div className="nav-bar__settings">
-          <a href={`/user/login`}>
-            <Button
-              className="js-btn primary"
-              icon="fa-solid fa-right-to-bracket"
-              text="Login" />
-          </a>
 
-          <a href={`/user/register`}>
-            <Button
-              className="js-btn secondary"
-              icon="fa-solid fa-user-plus"
-              text="Register" />
-          </a>
-        </div>
+        {
+          isAuthenticated ?
+          <span>auth</span>
+          :
+          <div className="nav-bar__settings">
+            <a href={`/user/login`}>
+              <Button
+                className="js-btn primary"
+                icon="fa-solid fa-right-to-bracket"
+                text="Login" />
+            </a>
+
+            <a href={`/user/register`}>
+              <Button
+                className="js-btn secondary"
+                icon="fa-solid fa-user-plus"
+                text="Register" />
+            </a>
+          </div>
+        }
       </header>
 
       <main>

@@ -1,5 +1,6 @@
 import '../../assets/global.scss';
 import Input from '../../components/Input';
+import Button from '../../components/Button';
 import JobPostingCard from '../../components/JobPostingCard';
 
 const App = () => {
@@ -11,7 +12,19 @@ const App = () => {
         </div>
 
         <div className="nav-bar__settings">
-          settings
+          <a href={`/user/login`}>
+            <Button
+              className="js-btn primary"
+              icon="fa-solid fa-right-to-bracket"
+              text="Login" />
+          </a>
+
+          <a href={`/user/register`}>
+            <Button
+              className="js-btn secondary"
+              icon="fa-solid fa-user-plus"
+              text="Register" />
+          </a>
         </div>
       </header>
 
@@ -29,9 +42,10 @@ const App = () => {
             type="text"
             className="position__input" />
 
-          <button className="filter-btn">
-            Filter
-          </button>
+          <Button
+            className="js-btn primary"
+            icon="fa-solid fa-magnifying-glass"
+            text="Search" />
         </section>
 
         <section className="job-postings">
@@ -40,10 +54,6 @@ const App = () => {
         )}
         </section>
       </main>
-
-      <footer>
-        
-      </footer>
     </div>
   );
 }

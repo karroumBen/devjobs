@@ -1,25 +1,63 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
+import Loader from '../../components/Loader';
 import JobPostingCard from '../../components/JobPostingCard';
 
 const JobPostingList = () => {
+  const [jobPosts, setJobPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [paramSet, setParamsSet] = useState({
+    name: '',
+    location: '',
+  });
+
   const navigate = useNavigate();
   const navigateJob = (evt, postId) => {
-    console.log(evt);
     navigate(`/jobDetails/${postId}`);
   }
+
+  const fetchNewPosts = () => {
+    axios.get('/jobposts/', { params: { paramSet }})
+    .then(({ data }) => {
+      setJobPosts([...data]);
+    })
+    .catch((error) => {
+      console.log({ error });
+    })
+    .finally(() => {
+      setIsLoading(false);
+    })
+  }
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setParamsSet({
+      ...paramSet,
+      [name]: value,
+    });
+  };
+
+  useEffect(() => {
+    fetchNewPosts();
+  }, [])
+  
   return (
     <main>
     <section className="search-bar">
       <Input
+        onChange={handleInputChange}
+        name="name"
         icon="fa-solid fa-magnifying-glass icon"
         placeholder="Filter by title, company, expterise"
         type="text"
         className="position__input" />
 
       <Input
+        name="location"
+        onChange={handleInputChange}
         icon="fa-solid fa-location-dot icon"
         placeholder="Filter by location ..."
         type="text"
@@ -32,9 +70,19 @@ const JobPostingList = () => {
     </section>
 
     <section className="job-postings">
-    {[1,2,3,4,5,6,7,8,9,10,11].map((post) =>
-      <JobPostingCard postId={post} key={post} onClick={(event) => navigateJob(event, post)}/>
-    )}
+      {
+        isLoading ?
+        <Loader /> :
+        <>
+        {
+          jobPosts.map(post => {
+            return <JobPostingCard
+                      post={post}
+                      key={post._id}
+                      onClick={(event) => navigateJob(event, post._id)}/>
+          })}
+        </>
+      }
     </section>
   </main>
   )

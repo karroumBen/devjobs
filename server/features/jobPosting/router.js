@@ -11,5 +11,6 @@ router.post('/', JobPostController.createJobPost);
 
 // Get job post by ID
 router.get('/:job_id', JobPostController.getJobPost);
+router.delete('/:job_id', JobPostController.deleteJobPost);
 
 module.exports = router;

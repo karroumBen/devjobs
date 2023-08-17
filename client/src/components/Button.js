@@ -5,7 +5,9 @@ const Button = ({ onClick, className, icon, text }) => {
     <button
       onClick={onClick}
       className={className}>
-      <i className={icon}></i>&nbsp;{text}
+
+      <i className={icon}></i>
+      {text ? <>&nbsp;{text}</>: <></>}
     </button>
   )
 }

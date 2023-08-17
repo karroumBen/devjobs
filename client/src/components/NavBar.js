@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 const NavBar = () => {
   const navigate = useNavigate();
   const [isMenuVisible, setIsMenuVisible] = useState(false);
-  const { isAuthenticated } = useAppContext();
+  const { isAuthenticated, user } = useAppContext();
   const toggleMenu = () => {
     setIsMenuVisible(!isMenuVisible);
   }
@@ -29,12 +29,12 @@ const NavBar = () => {
                 onClick={() => toggleMenu()}
                 className="js-btn default"
                 icon=""
-                text="AB" />
-            
+                text={user.name.substring(0,2)}
+              />
               {
                 isMenuVisible ?
                 <div className="menu-content">
-                  <h3>Karim</h3>
+                  <h3>{user.name}</h3>
                   <ul>
                     <li onClick={() => navigate('/profile')}> Profile</li>
                     <li onClick={() => performLogout()}>Log out</li>

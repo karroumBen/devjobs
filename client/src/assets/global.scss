@@ -98,6 +98,16 @@ code {
   100% { transform: rotate(360deg); }
 }
 
+.overlay {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+  z-index: 3;
+}
+
 /* styling nav-bar */
 
 .nav-bar {
@@ -124,7 +134,7 @@ code {
     background-color: #fff;
     border: 2px solid $border-color;
     border-radius: 10px;
-    z-index: 3;
+    z-index: 4;
     display: flex;
     flex-direction: column;
     padding: 1rem;

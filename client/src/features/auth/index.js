@@ -45,6 +45,7 @@ const Auth = () => {
       const { token } = data;
       localStorage.setItem('token', token);
       localStorage.setItem('isAuthenticated', 'true');
+      localStorage.setItem('user', JSON.stringify(data));
       setIsAuthenticated(true);
       setUser(data);
       navigate("/");

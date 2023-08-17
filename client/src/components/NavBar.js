@@ -14,11 +14,16 @@ const NavBar = () => {
   const performLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('userId');
     navigate('/user/login');
   }
 
   return (
     <header className="nav-bar">
+      {
+        isMenuVisible ? <div className="overlay" onClick={toggleMenu}></div> : <></>
+      }
+          
         <div className="nav-bar__logo">
           <h1>Dev jobs</h1>
         </div>

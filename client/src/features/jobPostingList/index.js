@@ -42,6 +42,10 @@ const JobPostingList = () => {
     });
   };
 
+  const performSearch = () => {
+    fetchNewPosts();
+  };
+
   useEffect(() => {
     fetchNewPosts();
   }, [])
@@ -66,6 +70,7 @@ const JobPostingList = () => {
         className="position__input" />
 
       <Button
+        onClick={performSearch}
         className="js-btn primary"
         icon="fa-solid fa-magnifying-glass"
         text="Search" />

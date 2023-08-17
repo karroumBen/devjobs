@@ -1,7 +1,10 @@
 import React from 'react'
-import companyLogo from '../assets/app-store.png';
+import { formatDistance, parseISO  } from 'date-fns'
 
 const JobPostingCard = ({ post, onClick }) => {
+  const formatDate = (date) => {
+    return formatDistance(parseISO(date), new Date(), { addSuffix: true })
+  }
   return (
     <article onClick={onClick} className="card" tabIndex={4}>
       <img
@@ -12,7 +15,7 @@ const JobPostingCard = ({ post, onClick }) => {
         height="50px"
       />
       <div className="card__details">
-        <span>5 days ago</span>&nbsp; <span>Full time</span>
+        <span>{formatDate(post.postedDate)}</span>&nbsp; <span>{post.jobType}</span>
         <h3>{post.title}</h3>
         <h4>{post.employer.username}</h4>
         <span>{post.location}</span>

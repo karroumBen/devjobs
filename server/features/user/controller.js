@@ -17,7 +17,7 @@ const UserController = {
       });
       res.status(200).json(newUser);
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred while registering the user.' });
+      res.status(500).json({ error });
     }
   },
 
@@ -33,8 +33,14 @@ const UserController = {
 
       // Generate a JWT token
       const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY, { expiresIn: '24h' });
-
-      res.json({ token });
+      res.json({
+        token,
+        name: user.username,
+        role: user.role,
+        id: user._id,
+        email: user.email,
+        avatar: user.avatar,
+      });
     } catch (error) {
       res.status(500).json({ error: 'An error occurred during login.' });
     }

@@ -15,9 +15,11 @@ export function GlobalContext({ children}) {
   const [isAuthenticated, setIsAuthenticated] = useState(
     localStorage.getItem('isAuthenticated') === 'true'
   );
+  const [user, setUser] = useState({ name: 'Guest Role'});
+
   return (
-    <AppContext.Provider value={{ isAuthenticated }}>
-      <AppContextUpdater.Provider value={{setIsAuthenticated}}>
+    <AppContext.Provider value={{ isAuthenticated, user }}>
+      <AppContextUpdater.Provider value={{setIsAuthenticated, setUser}}>
         {children}
       </AppContextUpdater.Provider>
     </AppContext.Provider>

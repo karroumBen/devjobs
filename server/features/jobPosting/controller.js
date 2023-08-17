@@ -4,17 +4,33 @@ const User = require('../user/Model.js');
 const JobPostController = {
   getAllJobPosts: async (req, res) => {
     try {
-      const { userId } = req.query;
+      const { userId, paramSet = {} } = req.query;
       let jobPosts = [];
+      const query = {};
 
-      if(userId) {
-        jobPosts = await JobPost.find({ employer: userId }).populate('employer', 'username avatar');
-      } else {
-        jobPosts = await JobPost.find({}).populate('employer', 'username avatar');
+      if (paramSet.location) {
+        query.$or = query.$or || [];
+        query.$or.push({ location: { $regex: paramSet.location, $options: 'i' }});
       }
+
+      if (paramSet.name) {
+        query.$or = query.$or || [];
+        query.$or.push({ title: { $regex: paramSet.name, $options: 'i' }});
+      }
+
+      if(Object.keys(paramSet).length) {
+        jobPosts =  await JobPost.find(query).populate('employer', 'username avatar');
+      } else {
+        if(userId) {
+          jobPosts = await JobPost.find({ employer: userId }).populate('employer', 'username avatar');
+        } else {
+          jobPosts = await JobPost.find({}).populate('employer', 'username avatar');
+        }
+      }
+      
       res.status(200).json(jobPosts);
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred while fetching job posts.' });
+      res.status(500).json({ error });
     }
   },
 

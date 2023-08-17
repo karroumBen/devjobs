@@ -1,14 +1,25 @@
 import React from 'react'
 
-const Input = ({ name, type, placeholder, className, icon }) => {
+const Input = ({
+  name,
+  value,
+  type,
+  placeholder,
+  className,
+  icon,
+  onChange,
+}) => {
   return (
     <div className="d-input">
-      <i className={icon}></i>
       <input
+        value={value}
         name={name}
         type={type}
         className={className}
-        placeholder={placeholder} />
+        placeholder={placeholder}
+        onChange={onChange}/>
+
+        { icon ?  <i className={icon}></i> : <></>}
     </div>
   )
 }

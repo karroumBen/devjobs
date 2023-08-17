@@ -6,10 +6,11 @@ import axios from 'axios';
 import { useAppContextUpdater } from '../../context';
 
 const Auth = () => {
-  const { setIsAuthenticated } = useAppContextUpdater();
+  const { setIsAuthenticated, setUser } = useAppContextUpdater();
   const navigate = useNavigate();
   const { action } = useParams();
   let isRegister = action === "register";
+
   const [errors, setErrors] = useState({});
 
   const handleSubmit = (event) => {
@@ -33,7 +34,6 @@ const Auth = () => {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      console.log(newFormData);
       sendData(newFormData);
     }
   };
@@ -46,6 +46,7 @@ const Auth = () => {
       localStorage.setItem('token', token);
       localStorage.setItem('isAuthenticated', 'true');
       setIsAuthenticated(true);
+      setUser(data);
       navigate("/");
     })
     .catch((error) => {

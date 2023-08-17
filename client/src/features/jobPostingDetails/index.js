@@ -1,9 +1,12 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams} from 'react-router-dom';
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import Button from '../../components/Button';
 import Loader from '../../components/Loader';
-
+import { formatDistance, parseISO  } from 'date-fns'
+const formatDate = (date) => {
+  return formatDistance(parseISO(date), new Date(), { addSuffix: true })
+}
 
 const JobPostingDetails = () => {
   const { postId } = useParams();
@@ -11,14 +14,13 @@ const JobPostingDetails = () => {
   const [postDetails, setPostDetails] = useState();
   const [employerInfo, setEmployerInfo] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const [employerId, setEmployerId] = useState()
+  
 
   const getDetails = () => {
     console.log();
     axios.get(`/jobposts/${postId}/`)
       .then(({ data }) => {
         console.log("employer", data);
-        setEmployerId(data.employer)
         setPostDetails(data);
         return data.employer
       }).then((employer) => {
@@ -49,27 +51,31 @@ const JobPostingDetails = () => {
 
   useEffect(() => {
     getDetails();
-  }, [])
+  })
+  function apply(){
+    alert("Applied Successfuly!")
+  }
 
 
   return (
 
-    <main className='grey-background'>
+    <main className='body-color'>
       {isLoading ?
         <Loader /> :
         <>
           <section className="posting-details-header"></section>
           <div className="company-card">
-            <div className="company-logo"><img src={employerInfo.avatar} /></div>
+            <div className="company-logo"><img src={employerInfo.avatar} alt='Company'/></div>
             <div className="company-name"> <label >{employerInfo.username}</label></div>
             <div className="company-website"> <label >{employerInfo.email}</label></div>
           </div>
           <section className="job-details">
-            <label id='details-labels'>{postDetails.postedDate}</label> - <label >{postDetails.jobType}</label><br />
+            <label id='details-labels'>{formatDate(postDetails.postedDate)}</label> - <label >{postDetails.jobType}</label><br />
             <div className='flex-div'>
               <h1>{postDetails.title}</h1>
               <Button
-                className="apply-btn"
+               onClick={apply}
+                 className="js-btn primary"
                 text="Apply Now" />
             </div>
             <label>{postDetails.location}</label>
@@ -82,7 +88,11 @@ const JobPostingDetails = () => {
               <p>{postDetails.description}</p>
             </section>
           </section>
-          <section className='apply-now'> Apply now</section>
+          <section className='apply-now'>
+          <Button
+                onClick={apply}
+                className="js-btn primary"
+                text="Apply Now" /></section>
         </>
       }
     </main>

@@ -204,6 +204,7 @@ code {
     }
   }
 }
+
 .posting-details-header{
   background-color: #2979FF ;
   width: 100%;
@@ -223,11 +224,12 @@ code {
   z-index: 2;
 }
 .job-details{
+  padding: 10px;
   border-radius: 5px;
   position:fixed;
   top: 200px;
   left: 25%;
-  bottom: 10%;
+  bottom: 15%;
   width: 50%;
  
  
@@ -238,10 +240,13 @@ code {
 }
 .apply-now{
   position: absolute;
-  
-  height: 50px;
+  text-align: end;
+  margin-top: 10px;
+  display: flex;
+  justify-content: end;
+  height: 60px;
   width: 100%;
- 
+  
   bottom: 0;
  
   background-color: white;
@@ -267,10 +272,7 @@ code {
 .grey-background{
   background-color: lightgrey;
 }
-.apply-btn{
-  margin-left: 10px;
-  height: 50px;
-}
+
 .company-name{
   width: 25%;
   z-index: 2;
@@ -281,9 +283,7 @@ code {
  
  align-items: center;
 }
-.bottom-apply{
 
-}
 
 
 .d-input {

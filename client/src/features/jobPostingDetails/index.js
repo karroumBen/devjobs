@@ -1,59 +1,92 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom';
-import Input from '../../components/Input';
+import { useParams, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react'
+import axios from 'axios';
 import Button from '../../components/Button';
-import JobPostingCard from '../../components/JobPostingCard';
+import Loader from '../../components/Loader';
 
-const JobPostingList = () => {
-  const navigate = useNavigate();
-  const navigateJob = (evt, postId) => {
-    console.log(evt);
-    navigate(`/jobDetails/${postId}`);
+
+const JobPostingDetails = () => {
+  const { postId } = useParams();
+
+  const [postDetails, setPostDetails] = useState();
+  const [employerInfo, setEmployerInfo] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [employerId, setEmployerId] = useState()
+
+  const getDetails = () => {
+    console.log();
+    axios.get(`/jobposts/${postId}/`)
+      .then(({ data }) => {
+        console.log("employer", data);
+        setEmployerId(data.employer)
+        setPostDetails(data);
+        return data.employer
+      }).then((employer) => {
+        getEmployerInfo(employer);
+
+      })
+      .catch((error) => {
+        console.log({ error });
+      })
+
   }
+  const getEmployerInfo = (employer) => {
+    console.log("employer ID", employer);
+    axios.get(`/users/${employer}/`)
+      .then(({ data }) => {
+        console.log(data);
+        console.log(data.avatar);
+        setEmployerInfo(data);
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        console.log({ error });
+      })
+
+  }
+
+
+
+  useEffect(() => {
+    getDetails();
+  }, [])
+
+
   return (
-    <main >
-      <section className="posting-details-header"></section>
-      <div className="company-card">
-        <div className="company-logo"><label>img</label></div>
-        <div className="company-name"> <label >Test2</label></div>
-        <div className="company-website"> <label >Test3</label></div>
-      </div>
-      <section className="job-details">
-        <label id='details-labels'>Date</label> - <label >Job Type</label><br />
-        <div className='flex-div'>
-          <h1>Job Title</h1>
-          <Button
-            className="apply-btn"
-            text="Apply Now" />
-        </div>
-        <label>location</label>
-        <section>
-          <h1> Requirements</h1>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-             sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-               ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit
-                in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                 Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-                  deserunt mollit anim id est laborum.</p>
-        </section>
-        <section>
-          <h1>What you will do?</h1>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-             sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-               ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit
-               sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-               ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit
-                in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                 Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-                  deserunt mollit anim id est laborum.</p>
-        </section>
-      </section>
-      <section className='apply-now'> Apply now</section>
+
+    <main className='grey-background'>
+      {isLoading ?
+        <Loader /> :
+        <>
+          <section className="posting-details-header"></section>
+          <div className="company-card">
+            <div className="company-logo"><img src={employerInfo.avatar} /></div>
+            <div className="company-name"> <label >{employerInfo.username}</label></div>
+            <div className="company-website"> <label >{employerInfo.email}</label></div>
+          </div>
+          <section className="job-details">
+            <label id='details-labels'>{postDetails.postedDate}</label> - <label >{postDetails.jobType}</label><br />
+            <div className='flex-div'>
+              <h1>{postDetails.title}</h1>
+              <Button
+                className="apply-btn"
+                text="Apply Now" />
+            </div>
+            <label>{postDetails.location}</label>
+            <section>
+              <h1> Requirements</h1>
+              <p>{postDetails.description}</p>
+            </section>
+            <section>
+              <h1>What you will do?</h1>
+              <p>{postDetails.description}</p>
+            </section>
+          </section>
+          <section className='apply-now'> Apply now</section>
+        </>
+      }
     </main>
   )
 }
 
-export default JobPostingList;
+export default JobPostingDetails;

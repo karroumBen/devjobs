@@ -195,23 +195,25 @@ code {
   }
 }
 .posting-details-header{
-  background-color: blue;
+  background-color: #2979FF ;
   width: 100%;
   height: 150px;
   border-bottom-left-radius: 100px;
 }
 .company-card{
   position: absolute;
+  border-radius: 10px;
   top: 75px;
   left: 25%;
   width: 50%;
   height: 100px;
   align-items: center;
-  background-color: yellowgreen;
+  background-color: white;
   display: flex;
   z-index: 2;
 }
 .job-details{
+  border-radius: 5px;
   position:fixed;
   top: 200px;
   left: 25%;
@@ -220,7 +222,7 @@ code {
  
  
   overflow-y: auto;
-  background-color: yellowgreen;
+  background-color: white;
 
   z-index: 2;
 }
@@ -232,20 +234,28 @@ code {
  
   bottom: 0;
  
-  background-color: yellowgreen;
+  background-color: white;
 
   z-index: 2;
 }
-.company-logo{
+.company-logo {
+ 
   width: 25%;
   z-index: 2;
   
-  align-items: center;
+  img{
+    border-radius: 10px;
+    width:  100px;
+    height: 100px;
+  }
  
 }
 .flex-div{
   display: flex;
   justify-content: space-between;
+}
+.grey-background{
+  background-color: lightgrey;
 }
 .apply-btn{
   margin-left: 10px;

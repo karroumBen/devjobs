@@ -6,6 +6,7 @@ import Button from '../../components/Button';
 import Loader from '../../components/Loader';
 import JobPostingCard from '../../components/JobPostingCard';
 
+
 const JobPostingList = () => {
   const [jobPosts, setJobPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -16,6 +17,7 @@ const JobPostingList = () => {
 
   const navigate = useNavigate();
   const navigateJob = (evt, postId) => {
+    
     navigate(`/jobDetails/${postId}`);
   }
 

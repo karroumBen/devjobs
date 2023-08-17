@@ -177,6 +177,76 @@ code {
     }
   }
 }
+.posting-details-header{
+  background-color: blue;
+  width: 100%;
+  height: 150px;
+  border-bottom-left-radius: 100px;
+}
+.company-card{
+  position: absolute;
+  top: 75px;
+  left: 25%;
+  width: 50%;
+  height: 100px;
+  align-items: center;
+  background-color: yellowgreen;
+  display: flex;
+  z-index: 2;
+}
+.job-details{
+  position:fixed;
+  top: 200px;
+  left: 25%;
+  bottom: 10%;
+  width: 50%;
+ 
+ 
+  overflow-y: auto;
+  background-color: yellowgreen;
+
+  z-index: 2;
+}
+.apply-now{
+  position: absolute;
+  
+  height: 50px;
+  width: 100%;
+ 
+  bottom: 0;
+ 
+  background-color: yellowgreen;
+
+  z-index: 2;
+}
+.company-logo{
+  width: 25%;
+  z-index: 2;
+  
+  align-items: center;
+ 
+}
+.flex-div{
+  display: flex;
+  justify-content: space-between;
+}
+.apply-btn{
+  margin-left: 10px;
+  height: 50px;
+}
+.company-name{
+  width: 25%;
+  z-index: 2;
+ 
+}
+.company-website{
+  width: 50%;
+ 
+ align-items: center;
+}
+.bottom-apply{
+
+}
 
 
 .d-input {

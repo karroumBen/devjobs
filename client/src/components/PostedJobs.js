@@ -165,12 +165,11 @@ const PostedJobs = () => {
                       </div>
 
                       <div className="list-action">
-                        {/* <Button
-                            onClick={(event) => removeJob(event, item._id)}
+                        <Button
                             className="js-btn default"
                             icon='fa-solid fa-pencil'
                             text=''
-                          /> */}
+                          />
                         <Button
                           onClick={(event) => removeJob(event, item._id)}
                           className="js-btn error"

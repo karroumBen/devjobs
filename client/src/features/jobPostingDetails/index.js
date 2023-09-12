@@ -4,9 +4,8 @@ import axios from 'axios';
 import Button from '../../components/Button';
 import Loader from '../../components/Loader';
 import { formatDistance, parseISO  } from 'date-fns'
-const formatDate = (date) => {
-  return formatDistance(parseISO(date), new Date(), { addSuffix: true })
-}
+
+
 
 const JobPostingDetails = () => {
   const { postId } = useParams();
@@ -47,11 +46,13 @@ const JobPostingDetails = () => {
 
   }
 
-
+  const formatDate = (date) => {
+    return formatDistance(parseISO(date), new Date(), { addSuffix: true })
+  }
 
   useEffect(() => {
     getDetails();
-  })
+  }, []);
   function apply(){
     alert("Applied Successfuly!")
   }

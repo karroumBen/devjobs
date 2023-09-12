@@ -34,7 +34,7 @@ const NavBar = () => {
                 onClick={() => toggleMenu()}
                 className="js-btn default"
                 icon=""
-                text={user.name.substring(0,2)}
+                text={user.name}
               />
               {
                 isMenuVisible ?

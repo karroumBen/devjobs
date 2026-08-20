@@ -4,7 +4,7 @@ export const addTokenToRequest = (acc) => {
   const token = localStorage.getItem('token');
 
   if (token !== null) {
-    acc.headers.Authorization = `Basic ${token}`;
+    acc.headers.Authorization = `Bearer ${token}`;
   }
 
   return acc;

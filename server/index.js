@@ -4,18 +4,22 @@ const jobPostRouter = require('./features/jobPosting/router.js');
 const jobApplicationRouter = require('./features/jobApplication/router.js');
 const cors = require('cors');
 
-app.use(cors());
+const allowlist = (process.env.CLIENT_ORIGIN || 'http://localhost:3001')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
-const allowlist = ['http://localhost:3001']
 const corsOptionsDelegate = function (req, callback) {
   var corsOptions;
   if (allowlist.indexOf(req.header('Origin')) !== -1) {
-    corsOptions = { origin: true } 
+    corsOptions = { origin: true }
   } else {
     corsOptions = { origin: false }
   }
   callback(null, corsOptions)
 }
+
+app.use(cors(corsOptionsDelegate));
 
 app.use('/api/users', cors(corsOptionsDelegate), userRouter);
 app.use('/api/jobposts', cors(corsOptionsDelegate), jobPostRouter);

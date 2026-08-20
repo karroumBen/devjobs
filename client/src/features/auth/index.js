@@ -9,12 +9,15 @@ const Auth = () => {
   const { setIsAuthenticated, setUser } = useAppContextUpdater();
   const navigate = useNavigate();
   const { action } = useParams();
-  let isRegister = action === "register";
+  const isRegister = action === "register";
 
   const [errors, setErrors] = useState({});
+  const [submitError, setSubmitError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    setSubmitError('');
 
     const formElements = event.target.elements;
     const newFormData = {};
@@ -39,71 +42,76 @@ const Auth = () => {
   };
 
   const sendData = (payload) => {
-    const url = isRegister ? '/users/register': '/users/login';
+    const url = isRegister ? '/users/register' : '/users/login';
+    setIsSubmitting(true);
+
     axios.post(url, payload)
-    .then(({ data }) => {
-      const { token } = data;
-      localStorage.setItem('token', token);
-      localStorage.setItem('isAuthenticated', 'true');
-      localStorage.setItem('user', JSON.stringify(data));
-      setIsAuthenticated(true);
-      setUser(data);
-      navigate("/");
-    })
-    .catch((error) => {
-      console.log({ error });
-    })
+      .then(({ data }) => {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('isAuthenticated', 'true');
+        localStorage.setItem('user', JSON.stringify(data));
+        setIsAuthenticated(true);
+        setUser(data);
+        navigate("/");
+      })
+      .catch((error) => {
+        const message = error.response?.data?.message
+          || error.response?.data?.error
+          || 'Something went wrong. Please try again.';
+        setSubmitError(typeof message === 'string' ? message : 'Something went wrong. Please try again.');
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   }
 
   return (
     <div className="register">
       <div className="register__form">
-        <form method='post' onSubmit={ (evt) => handleSubmit(evt) }>
-          {
-            isRegister ? 
+        <form onSubmit={handleSubmit}>
+          {isRegister ?
             <>
               <div>
-                <label>Name</label>
+                <label htmlFor="auth-name">Name</label>
                 <Input
                   name="name"
-                  icon="fa-solid fa-mail"
+                  icon="fa-solid fa-user"
                   placeholder=""
                   type="text"
                   className="position__input" />
 
                 {errors.name && <span className="error">{errors.name}</span>}
               </div>
-              
+
               <div>
-                <label>Account type</label>
+                <label htmlFor="auth-type">Account type</label>
                 <select name="type" className="account-type">
                   <option value="candidate">Candidate</option>
                   <option value="employer">Employer</option>
                 </select>
               </div>
-            </> : <></>
-          }
+            </>
+            : null}
 
           <div>
-            <label>Email</label>
+            <label htmlFor="auth-email">Email</label>
 
             <Input
               name="email"
-              patter=""
-              icon="fa-solid fa-mail"
+              icon="fa-solid fa-envelope"
               placeholder=""
-              type="mail"
+              type="email"
               className="position__input" />
-            
+
             {errors.email && <span className="error">{errors.email}</span>}
           </div>
 
           <div>
-            <label>Password</label>
+            <label htmlFor="auth-password">Password</label>
 
             <Input
               name="password"
-              icon="fa-solid fa-mail"
+              icon="fa-solid fa-lock"
               placeholder=""
               type="password"
               className="position__input" />
@@ -111,10 +119,13 @@ const Auth = () => {
             {errors.password && <span className="error">{errors.password}</span>}
           </div>
 
+          {submitError && <p className="error">{submitError}</p>}
+
           <Button
+            type="submit"
             className="js-btn primary"
             icon="fa-solid fa-right-to-bracket"
-            text={isRegister ? "Register" : "Login"} />
+            text={isSubmitting ? "Please wait..." : (isRegister ? "Register" : "Login")} />
         </form>
       </div>
     </div>

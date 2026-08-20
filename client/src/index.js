@@ -7,7 +7,7 @@ import axios from 'axios';
 import './utils/requestInterceptor';
 import { GlobalContext } from './context';
 
-axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
+axios.defaults.baseURL = process.env.REACT_APP_BASE_URL || '/api';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

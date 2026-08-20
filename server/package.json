@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "serve": "nodemon index.js"
+    "serve": "nodemon index.js",
+    "start": "node index.js"
   },
+  "packageManager": "yarn@4.5.0",
   "keywords": [],
   "author": "",
   "license": "ISC",

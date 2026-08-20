@@ -10,28 +10,33 @@ import JobPostingCard from '../../components/JobPostingCard';
 const JobPostingList = () => {
   const [jobPosts, setJobPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
   const [paramSet, setParamsSet] = useState({
     name: '',
     location: '',
   });
 
   const navigate = useNavigate();
+
   const navigateJob = (evt, postId) => {
-    
     navigate(`/jobDetails/${postId}`);
   }
 
   const fetchNewPosts = () => {
-    axios.get('/jobposts/', { params: { paramSet }})
-    .then(({ data }) => {
-      setJobPosts([...data]);
-    })
-    .catch((error) => {
-      console.log({ error });
-    })
-    .finally(() => {
-      setIsLoading(false);
-    })
+    setIsLoading(true);
+    setError('');
+
+    axios.get('/jobposts/', { params: { paramSet } })
+      .then(({ data }) => {
+        setJobPosts(Array.isArray(data) ? data : []);
+      })
+      .catch(() => {
+        setError('Failed to load job postings.');
+        setJobPosts([]);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      })
   }
 
   const handleInputChange = (event) => {
@@ -48,50 +53,49 @@ const JobPostingList = () => {
 
   useEffect(() => {
     fetchNewPosts();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  
+
   return (
     <main>
-    <section className="search-bar">
-      <Input
-        onChange={handleInputChange}
-        name="name"
-        icon="fa-solid fa-magnifying-glass icon"
-        placeholder="Filter by title, company, expterise"
-        type="text"
-        className="position__input" />
+      <section className="search-bar">
+        <Input
+          onChange={handleInputChange}
+          name="name"
+          icon="fa-solid fa-magnifying-glass icon"
+          placeholder="Filter by title, company, expertise"
+          type="text"
+          className="position__input" />
 
-      <Input
-        name="location"
-        onChange={handleInputChange}
-        icon="fa-solid fa-location-dot icon"
-        placeholder="Filter by location ..."
-        type="text"
-        className="position__input" />
+        <Input
+          name="location"
+          onChange={handleInputChange}
+          icon="fa-solid fa-location-dot icon"
+          placeholder="Filter by location ..."
+          type="text"
+          className="position__input" />
 
-      <Button
-        onClick={performSearch}
-        className="js-btn primary"
-        icon="fa-solid fa-magnifying-glass"
-        text="Search" />
-    </section>
+        <Button
+          type="button"
+          onClick={performSearch}
+          className="js-btn primary"
+          icon="fa-solid fa-magnifying-glass"
+          text="Search" />
+      </section>
 
-    <section className="job-postings">
-      {
-        isLoading ?
-        <Loader /> :
-        <>
-        {
-          jobPosts.map(post => {
-            return <JobPostingCard
-                      post={post}
-                      key={post._id}
-                      onClick={(event) => navigateJob(event, post._id)}/>
-          })}
-        </>
-      }
-    </section>
-  </main>
+      <section className="job-postings">
+        {error && <p className="error">{error}</p>}
+        {isLoading ?
+          <Loader /> :
+          jobPosts.map(post => (
+            <JobPostingCard
+              post={post}
+              key={post._id}
+              onClick={(event) => navigateJob(event, post._id)} />
+          ))
+        }
+      </section>
+    </main>
   )
 }
 

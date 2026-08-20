@@ -9,6 +9,7 @@ const PostedJobs = () => {
   const { user } = useAppContext();
   const [isEditMode, setIsEditMode] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
   const [jobPosts, setJobPosts] = useState([]);
 
   const toggleEditMode = () => {
@@ -28,165 +29,173 @@ const PostedJobs = () => {
         newFormData[fieldName] = element.value;
       }
     }
-    
+
     sendData(newFormData);
   };
 
   const sendData = (payload) => {
-    axios.post('/jobposts/', { userId: user.id, ...payload})
-    .then(() => {
-      toggleEditMode();
-      fetchNewPosts();
-    })
-    .catch((error) => {
-      console.log({ error });
-    })
+    setError('');
+
+    axios.post('/jobposts/', { userId: user.id, ...payload })
+      .then(() => {
+        toggleEditMode();
+        fetchNewPosts();
+      })
+      .catch(() => {
+        setError('Failed to save job posting.');
+      })
   }
 
   const fetchNewPosts = () => {
-    axios.get('/jobposts/', { params: { userId: user.id }})
-    .then(({ data }) => {
-      setJobPosts([...data]);
-    })
-    .catch((error) => {
-      console.log({ error });
-    })
-    .finally(() => {
-      setIsLoading(false);
-    })
+    setIsLoading(true);
+    setError('');
+
+    axios.get('/jobposts/', { params: { userId: user.id } })
+      .then(({ data }) => {
+        setJobPosts(Array.isArray(data) ? data : []);
+      })
+      .catch(() => {
+        setError('Failed to load your job postings.');
+        setJobPosts([]);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      })
   }
-  
+
   const removeJob = (evt, id) => {
+    setError('');
+
     axios.delete(`/jobposts/${id}`)
-    .then(() => {
-      fetchNewPosts();
-    })
-    .catch((error) => {
-      console.log({ error });
-    })
-    .finally(() => {
-      setIsLoading(false);
-    })
+      .then(() => {
+        fetchNewPosts();
+      })
+      .catch(() => {
+        setError('Failed to delete job posting.');
+      })
   }
 
   useEffect(() => {
-    fetchNewPosts();
-  }, [setJobPosts])
+    if (user.id) {
+      fetchNewPosts();
+    } else {
+      setIsLoading(false);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user.id])
 
   return (
     <div className='job-posting'>
-      <div className="action-bar">
-        {
-          isEditMode ?
-            <></>
-            :
-            <Button
-              onClick={toggleEditMode}
-              className="js-btn primary"
-              icon='fa-solid fa-plus'
-              text='New' />
+      {error && <p className="error">{error}</p>}
 
+      <div className="action-bar">
+        {!isEditMode &&
+          <Button
+            type="button"
+            onClick={toggleEditMode}
+            className="js-btn primary"
+            icon='fa-solid fa-plus'
+            text='New' />
         }
       </div>
 
-      {
-        isEditMode ?
-          <div className="new-job-form">
-            <form onSubmit={handleSubmit}>
-              <div>
-                  <label>Title</label>
-                  <Input
-                    name="title"
-                    icon="fa-solid fa-mail"
-                    placeholder=""
-                    type="text"
-                    className="position__input" />
-                </div>
+      {isEditMode ?
+        <div className="new-job-form">
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label>Title</label>
+              <Input
+                name="title"
+                icon="fa-solid fa-briefcase"
+                placeholder=""
+                type="text"
+                className="position__input" />
+            </div>
 
-                <div>
-                  <label>Job type</label>
-                  <select name="jobType" className="account-type">
-                    <option value="Full time">Full Time</option>
-                    <option value="Part time">Part Time</option>
-                    <option value="Contract">Contract</option>
-                  </select>
-                </div>
+            <div>
+              <label>Job type</label>
+              <select name="jobType" className="account-type">
+                <option value="Full time">Full Time</option>
+                <option value="Part time">Part Time</option>
+                <option value="Contract">Contract</option>
+              </select>
+            </div>
 
-                <div>
-                  <label>Job distance</label>
-                  <select name="distance" className="account-type">
-                    <option value="Remote">Remote</option>
-                    <option value="On site">On site</option>
-                    <option value="Hybrid">Hybrid</option>
-                  </select>
-                </div>
+            <div>
+              <label>Job distance</label>
+              <select name="distance" className="account-type">
+                <option value="Remote">Remote</option>
+                <option value="On site">On site</option>
+                <option value="Hybrid">Hybrid</option>
+              </select>
+            </div>
 
+            <div>
+              <label>Location</label>
 
-                <div>
-                  <label>Location</label>
+              <Input
+                name="location"
+                placeholder=""
+                type="text"
+                className="position__input" />
+            </div>
 
-                  <Input
-                    name="location"
-                    placeholder=""
-                    type="text"
-                    className="position__input" />
-                </div>
+            <div>
+              <label>Description</label>
 
-                <div>
-                  <label>Description</label>
+              <textarea name="description" rows="10" cols="20" className='position__input'></textarea>
+            </div>
 
-                  <textarea name="description" rows="10" cols="20" className='position__input'></textarea>
-                </div>
+            <div>
+              <Button
+                type="submit"
+                className="js-btn primary"
+                icon='fa-solid fa-save'
+                text='Save Job' />
 
-                <div>
-                  <Button
-                    className="js-btn primary"
-                    icon='fa-solid fa-save'
-                    text='Save Job' />
-
-                  <Button
-                    onClick={toggleEditMode}
-                    className="js-btn error"
-                    icon='fa-solid fa-save'
-                    text='Cancel' />
-                </div>
-            </form>
-          </div>
+              <Button
+                type="button"
+                onClick={toggleEditMode}
+                className="js-btn error"
+                icon='fa-solid fa-xmark'
+                text='Cancel' />
+            </div>
+          </form>
+        </div>
         :
         <div className="job-list">
-          { isLoading ?
+          {isLoading ?
             <Loader /> :
             <ul>
-              { jobPosts.map(item => {
-                  return <li key={item._id }>
-                    <div className='list-item'>
-                      <div className="details">
-                        {item.title} || <span>{item.location}</span>
-                      </div>
-
-                      <div className="list-action">
-                        <Button
-                            className="js-btn default"
-                            icon='fa-solid fa-pencil'
-                            text=''
-                          />
-                        <Button
-                          onClick={(event) => removeJob(event, item._id)}
-                          className="js-btn error"
-                          icon='fa-solid fa-trash'
-                          text=''
-                        />
-                      </div>
+              {jobPosts.map(item => (
+                <li key={item._id}>
+                  <div className='list-item'>
+                    <div className="details">
+                      {item.title} || <span>{item.location}</span>
                     </div>
-                    
-                  </li>
-                })
-              }
+
+                    <div className="list-action">
+                      <Button
+                        type="button"
+                        className="js-btn default"
+                        icon='fa-solid fa-pencil'
+                        text=''
+                      />
+                      <Button
+                        type="button"
+                        onClick={(event) => removeJob(event, item._id)}
+                        className="js-btn error"
+                        icon='fa-solid fa-trash'
+                        text=''
+                      />
+                    </div>
+                  </div>
+                </li>
+              ))}
             </ul>
           }
-        </div> 
+        </div>
       }
-      
     </div>
   )
 }

@@ -61,7 +61,7 @@ const Profile = () => {
                 value={formData.email}
                 name="email"
                 placeholder=""
-                type="mail"
+                type="email"
                 className="position__input"
                 onChange={handleInputChange} />
             </div>
